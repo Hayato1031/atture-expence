@@ -1,6 +1,15 @@
 # Changelog
 
 AttureExpenceの変更履歴
+## [1.0.9] - 2025-05-30
+
+### 修正
+- 🐛 macOSアプリ「壊れているため開けません」エラーの修正
+  - entitlementsファイルを最小限の権限に簡素化
+  - hardenedRuntimeを無効化してquarantine問題を回避
+  - GitHub Actionsでad-hoc署名を有効化
+  - 署名なしアプリの起動問題を解決
+
 ## [1.0.8] - 2025-05-30
 
 ### 修正

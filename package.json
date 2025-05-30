@@ -100,17 +100,25 @@
       "asar": false,
       "target": [
         {
-          "target": "default",
+          "target": "dmg",
           "arch": [
             "arm64",
             "x64"
           ]
         }
       ],
-      "hardenedRuntime": true,
+      "hardenedRuntime": false,
       "gatekeeperAssess": false,
       "entitlements": "build/entitlements.mac.plist",
-      "entitlementsInherit": "build/entitlements.mac.plist"
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "identity": null,
+      "type": "distribution",
+      "notarize": false,
+      "signIgnore": [],
+      "forceCodeSigning": false
+    },
+    "dmg": {
+      "sign": false
     },
     "win": {
       "target": "nsis",

@@ -61,12 +61,13 @@ jobs:
     - name: Build React app
       run: npm run build
       
-    - name: Build macOS app (without code signing)
+    - name: Build macOS app (with ad-hoc signing)
       run: npm run build:mac
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
         CI: true
         CSC_IDENTITY_AUTO_DISCOVERY: false
+        CREATE_DMG_WITH_AD_HOC_SIGN: true
         
     - name: Upload macOS artifacts
       uses: actions/upload-artifact@v4
