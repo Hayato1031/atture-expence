@@ -8,7 +8,7 @@ import storage from './storage';
 class UpdateService {
   constructor() {
     this.checkInterval = null;
-    this.updateCheckUrl = 'https://api.github.com/repos/your-username/AttureExpence/releases/latest'; // GitHub APIの例
+    this.updateCheckUrl = 'https://api.github.com//Hayato1031/atture-expence/AttureExpence/releases/latest'; // GitHub APIの例
   }
 
   /**
