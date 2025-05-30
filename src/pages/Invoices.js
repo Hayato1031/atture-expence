@@ -10,7 +10,6 @@ import {
   Avatar,
   List,
   ListItem,
-  ListItemText,
   ListItemIcon,
   ListItemSecondaryAction,
   IconButton,
@@ -45,7 +44,7 @@ import {
 import { motion } from 'framer-motion';
 import GlassCard, { GlassCardContent, GlassCardPresets } from '../components/common/GlassCard';
 import invoiceService from '../services/invoiceService';
-import { formatDate, formatCurrency } from '../utils/formatters';
+import { formatDate } from '../utils/formatters';
 import useSettings from '../hooks/useSettings';
 import FileUpload from '../components/Registration/FileUpload';
 import FilePreviewDialog from '../components/common/FilePreviewDialog';

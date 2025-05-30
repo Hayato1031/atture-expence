@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -11,7 +11,6 @@ import {
   Divider,
   Stack,
   Chip,
-  IconButton,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -41,7 +40,7 @@ import {
 import { motion } from 'framer-motion';
 import GlassCard, { GlassCardContent } from '../common/GlassCard';
 import updateService from '../../services/updateService';
-import { getCurrentVersion, formatVersion, getVersionInfo } from '../../utils/version';
+import { formatVersion, getVersionInfo } from '../../utils/version';
 
 const UpdateSettings = () => {
   const [settings, setSettings] = useState(updateService.getUpdateSettings());

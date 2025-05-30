@@ -10,22 +10,14 @@ import {
   FormControlLabel,
   Stack,
   Grid,
-  Card,
-  CardContent,
   Slider,
   Alert,
   Divider,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
   Button,
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
-  TextField,
-  Chip
+  DialogActions
 } from '@mui/material';
 import {
   Schedule as ScheduleIcon,

@@ -30,7 +30,8 @@ import {
   Search as SearchIcon,
   Save as SaveIcon,
   Undo as UndoIcon,
-  RestartAlt as ResetIcon
+  RestartAlt as ResetIcon,
+  Refresh as RefreshIcon
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 
