@@ -154,7 +154,7 @@ const useUsers = () => {
       setError(err.message || 'ユーザーステータスの変更に失敗しました');
       throw err;
     }
-  }, [users, loadStats]);
+  }, [loadStats]);
 
   // Toggle user starred status (local only for now)
   const toggleUserStarred = useCallback(async (userId) => {

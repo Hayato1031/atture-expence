@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import settingsService from '../services/settingsService';
 import aiService from '../services/aiService';
 
@@ -14,7 +14,7 @@ export const useSettings = () => {
   const [pendingChanges, setPendingChanges] = useState({});
 
   // Default settings configuration with validation
-  const defaultSettings = {
+  const defaultSettings = useMemo(() => ({
     // Theme settings
     theme: 'light',
     colorScheme: 'default',
@@ -62,10 +62,10 @@ export const useSettings = () => {
     showTutorials: true,
     defaultView: 'dashboard',
     itemsPerPage: 25
-  };
+  }), []);
 
   // Validation rules for settings
-  const validationRules = {
+  const validationRules = useMemo(() => ({
     theme: (value) => ['light', 'dark', 'auto'].includes(value),
     colorScheme: (value) => ['default', 'blue', 'purple', 'green', 'custom'].includes(value),
     fontSize: (value) => value >= 10 && value <= 24,
@@ -87,7 +87,7 @@ export const useSettings = () => {
         return false;
       }
     }
-  };
+  }), []);
 
   // Load settings from database
   const loadSettings = useCallback(async () => {
@@ -109,7 +109,7 @@ export const useSettings = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [defaultSettings]);
 
   // Validate a single setting value
   const validateSetting = useCallback((key, value) => {
@@ -128,7 +128,7 @@ export const useSettings = () => {
         error: `Validation error for ${key}: ${err.message}`
       };
     }
-  }, []);
+  }, [validationRules]);
 
   // Update a single setting (in memory only until saved)
   const updateSetting = useCallback((key, value) => {
@@ -227,16 +227,11 @@ export const useSettings = () => {
   // Discard pending changes
   const discardChanges = useCallback(() => {
     // Revert to saved settings
-    Object.keys(pendingChanges).forEach(key => {
-      setSettingsState(prev => ({
-        ...prev,
-        [key]: settings[key] || defaultSettings[key]
-      }));
-    });
+    loadSettings();
     
     setPendingChanges({});
     setHasChanges(false);
-  }, [pendingChanges, settings]);
+  }, [loadSettings]);
 
   // Reset a single setting to default
   const resetSettingToDefault = useCallback(async (key) => {
@@ -255,7 +250,7 @@ export const useSettings = () => {
       setError('設定のリセットに失敗しました');
       return { success: false, error: err.message };
     }
-  }, [loadSettings]);
+  }, [loadSettings, defaultSettings]);
 
   // Reset all settings to defaults
   const resetAllSettingsToDefaults = useCallback(async () => {
@@ -315,7 +310,7 @@ export const useSettings = () => {
   // Get setting value with fallback to default
   const getSetting = useCallback((key) => {
     return settings[key] !== undefined ? settings[key] : defaultSettings[key];
-  }, [settings]);
+  }, [settings, defaultSettings]);
 
   // Check if setting has been modified
   const isModified = useCallback((key) => {

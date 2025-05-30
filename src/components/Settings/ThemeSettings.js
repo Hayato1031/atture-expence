@@ -1,9 +1,7 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   Box,
   Typography,
-  Switch,
-  FormControlLabel,
   Slider,
   Grid,
   Card,
@@ -12,10 +10,8 @@ import {
   Select,
   MenuItem,
   FormControl,
-  InputLabel,
   Stack,
   Chip,
-  IconButton,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -36,7 +32,6 @@ import {
   Preview as PreviewIcon,
   Undo as UndoIcon
 } from '@mui/icons-material';
-import { motion } from 'framer-motion';
 import GlassCard, { GlassCardContent } from '../common/GlassCard';
 
 const ThemeSettings = ({ settings, updateSetting, hasChanges, isModified }) => {
@@ -46,7 +41,7 @@ const ThemeSettings = ({ settings, updateSetting, hasChanges, isModified }) => {
   const [customColor, setCustomColor] = useState('#6366f1');
 
   // Color scheme presets
-  const colorSchemes = {
+  const colorSchemes = useMemo(() => ({
     default: {
       name: 'デフォルト',
       colors: {
@@ -91,7 +86,7 @@ const ThemeSettings = ({ settings, updateSetting, hasChanges, isModified }) => {
       name: 'カスタム',
       colors: settings.customColors || {}
     }
-  };
+  }), [settings.customColors]);
 
   // Font size presets
   const fontSizeOptions = [
@@ -113,12 +108,8 @@ const ThemeSettings = ({ settings, updateSetting, hasChanges, isModified }) => {
     if (scheme !== 'custom') {
       updateSetting('customColors', colorSchemes[scheme].colors);
     }
-  }, [updateSetting]);
+  }, [updateSetting, colorSchemes]);
 
-  // Handle font size change
-  const handleFontSizeChange = useCallback((event, value) => {
-    updateSetting('fontSize', value);
-  }, [updateSetting]);
 
   // Handle glass intensity change
   const handleGlassIntensityChange = useCallback((event, value) => {
@@ -136,7 +127,7 @@ const ThemeSettings = ({ settings, updateSetting, hasChanges, isModified }) => {
     if (settings.colorScheme !== 'custom') {
       updateSetting('colorScheme', 'custom');
     }
-  }, [settings, updateSetting]);
+  }, [settings, updateSetting, colorSchemes.default.colors]);
 
   // Open color picker
   const openColorPicker = useCallback((colorType) => {
@@ -144,7 +135,7 @@ const ThemeSettings = ({ settings, updateSetting, hasChanges, isModified }) => {
     const currentColors = settings.customColors || colorSchemes.default.colors;
     setCustomColor(currentColors[colorType] || '#6366f1');
     setColorPickerOpen(true);
-  }, [settings]);
+  }, [settings, colorSchemes.default.colors]);
 
   // Save custom color
   const saveCustomColor = useCallback(() => {
@@ -159,7 +150,7 @@ const ThemeSettings = ({ settings, updateSetting, hasChanges, isModified }) => {
     updateSetting('fontSize', 14);
     updateSetting('glassIntensity', 0.25);
     updateSetting('customColors', colorSchemes.default.colors);
-  }, [updateSetting]);
+  }, [updateSetting, colorSchemes]);
 
   // Get current colors
   const getCurrentColors = useCallback(() => {
@@ -168,7 +159,7 @@ const ThemeSettings = ({ settings, updateSetting, hasChanges, isModified }) => {
       return settings.customColors || colorSchemes.default.colors;
     }
     return colorSchemes[scheme]?.colors || colorSchemes.default.colors;
-  }, [settings]);
+  }, [settings, colorSchemes]);
 
   // Preview component
   const ThemePreview = () => {

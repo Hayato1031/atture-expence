@@ -12,14 +12,11 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  TextField,
   LinearProgress,
   List,
   ListItem,
   ListItemText,
   ListItemIcon,
-  Chip,
-  Divider,
   FormControlLabel,
   Checkbox,
   Select,
@@ -47,14 +44,12 @@ import {
   Publish as PublishIcon,
   Refresh as RefreshIcon
 } from '@mui/icons-material';
-import { motion, AnimatePresence } from 'framer-motion';
 import GlassCard, { GlassCardContent } from '../common/GlassCard';
 import storage from '../../services/storage';
 import settingsService from '../../services/settingsService';
 
 const DataManagement = ({ settings, updateSetting, exportSettingsData, importSettingsData }) => {
   const [exportDialog, setExportDialog] = useState(false);
-  const [importDialog, setImportDialog] = useState(false);
   const [clearDataDialog, setClearDataDialog] = useState(false);
   const [integrityDialog, setIntegrityDialog] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -103,6 +98,29 @@ const DataManagement = ({ settings, updateSetting, exportSettingsData, importSet
     } catch (error) {
       console.error('Failed to get storage info:', error);
     }
+  }, []);
+
+  // Convert to CSV format (simplified)
+  const convertToCSV = useCallback((data) => {
+    let csv = '';
+    
+    // Export expenses to CSV
+    if (data.data.expenses && data.data.expenses.length > 0) {
+      csv += 'Expenses\n';
+      const headers = Object.keys(data.data.expenses[0]);
+      csv += headers.join(',') + '\n';
+      
+      for (const expense of data.data.expenses) {
+        const row = headers.map(header => {
+          const value = expense[header];
+          return typeof value === 'string' ? `"${value.replace(/"/g, '""')}"` : value;
+        });
+        csv += row.join(',') + '\n';
+      }
+      csv += '\n';
+    }
+    
+    return csv;
   }, []);
 
   // Export all data
@@ -194,7 +212,7 @@ const DataManagement = ({ settings, updateSetting, exportSettingsData, importSet
       setProcessing(false);
       setProgress(0);
     }
-  }, [exportOptions, exportSettingsData]);
+  }, [exportOptions, convertToCSV]);
 
   // Import data
   const handleImportData = useCallback(async (file) => {
@@ -290,7 +308,6 @@ const DataManagement = ({ settings, updateSetting, exportSettingsData, importSet
 
           setProgress(100);
           setImportResult(results);
-          setImportDialog(false);
           
         } catch (error) {
           console.error('Import failed:', error);
@@ -308,7 +325,7 @@ const DataManagement = ({ settings, updateSetting, exportSettingsData, importSet
       setProcessing(false);
       setProgress(0);
     }
-  }, [importSettingsData]);
+  }, []);
 
 
   // Clear all data
@@ -429,28 +446,6 @@ const DataManagement = ({ settings, updateSetting, exportSettingsData, importSet
     }
   }, []);
 
-  // Convert to CSV format (simplified)
-  const convertToCSV = useCallback((data) => {
-    let csv = '';
-    
-    // Export expenses to CSV
-    if (data.data.expenses && data.data.expenses.length > 0) {
-      csv += 'Expenses\n';
-      const headers = Object.keys(data.data.expenses[0]);
-      csv += headers.join(',') + '\n';
-      
-      for (const expense of data.data.expenses) {
-        const row = headers.map(header => {
-          const value = expense[header];
-          return typeof value === 'string' ? `"${value.replace(/"/g, '""')}"` : value;
-        });
-        csv += row.join(',') + '\n';
-      }
-      csv += '\n';
-    }
-    
-    return csv;
-  }, []);
 
   // Format file size
   const formatFileSize = useCallback((bytes) => {

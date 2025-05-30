@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import {
   Box,
   Typography,
@@ -66,7 +66,7 @@ const CategorySettings = ({ settings, updateSetting, hasChanges, isModified }) =
   const [error, setError] = useState(null);
 
   // Available icons for categories
-  const availableIcons = [
+  const availableIcons = useMemo(() => [
     { name: 'category', icon: '📁', label: 'フォルダ' },
     { name: 'transport', icon: '🚗', label: '交通' },
     { name: 'food', icon: '🍽️', label: '食事' },
@@ -83,10 +83,10 @@ const CategorySettings = ({ settings, updateSetting, hasChanges, isModified }) =
     { name: 'salary', icon: '💰', label: '給与' },
     { name: 'bonus', icon: '🎉', label: 'ボーナス' },
     { name: 'freelance', icon: '💻', label: 'フリーランス' }
-  ];
+  ], []);
 
   // Category presets for import
-  const categoryPresets = {
+  const categoryPresets = useMemo(() => ({
     taxAccounting: {
       name: '税務会計カテゴリ',
       categories: [
@@ -125,7 +125,7 @@ const CategorySettings = ({ settings, updateSetting, hasChanges, isModified }) =
         { name: 'ボーナス', type: 'income', color: '#10b981', icon: 'bonus' }
       ]
     }
-  };
+  }), []);
 
   // Load categories from database
   const loadCategories = useCallback(async () => {
@@ -314,13 +314,13 @@ const CategorySettings = ({ settings, updateSetting, hasChanges, isModified }) =
       console.error('Failed to import preset:', err);
       setError('プリセットのインポートに失敗しました');
     }
-  }, [loadCategories]);
+  }, [loadCategories, categoryPresets]);
 
   // Get icon for category
   const getIconForCategory = useCallback((iconName) => {
     const iconData = availableIcons.find(icon => icon.name === iconName);
     return iconData ? iconData.icon : '📁';
-  }, []);
+  }, [availableIcons]);
 
   // Organize categories into hierarchy
   const organizeCategories = useCallback((categoriesList) => {

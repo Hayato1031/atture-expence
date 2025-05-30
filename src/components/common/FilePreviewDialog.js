@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -22,13 +22,7 @@ const FilePreviewDialog = ({ open, onClose, fileIds = [] }) => {
   const [error, setError] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  useEffect(() => {
-    if (open && fileIds.length > 0) {
-      loadFiles();
-    }
-  }, [open, fileIds]);
-
-  const loadFiles = async () => {
+  const loadFiles = useCallback(async () => {
     setLoading(true);
     setError('');
     
@@ -46,7 +40,13 @@ const FilePreviewDialog = ({ open, onClose, fileIds = [] }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [fileIds]);
+
+  useEffect(() => {
+    if (open && fileIds.length > 0) {
+      loadFiles();
+    }
+  }, [open, fileIds, loadFiles]);
 
   const currentFile = files[currentIndex];
 
