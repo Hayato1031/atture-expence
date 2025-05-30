@@ -1,6 +1,6 @@
 {
   "name": "attureexpence",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Expense tracking application with Electron, React, and Material UI",
   "main": "main.js",
   "scripts": {
