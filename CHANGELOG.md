@@ -1,6 +1,15 @@
 # Changelog
 
 AttureExpenceの変更履歴
+## [1.0.8] - 2025-05-30
+
+### 修正
+- 🐛 macOSビルド設定の修正
+  - electron-builderの`arch`設定を`target`配列に変更
+  - arm64とx64の両アーキテクチャをサポート
+  - hardenedRuntimeを有効化して「破損」エラーを回避
+  - entitlementsファイルを追加してアプリ権限を適切に設定
+
 ## [1.0.7] - 2025-05-30
 
 ### 修正
