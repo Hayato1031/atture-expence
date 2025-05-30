@@ -17,6 +17,10 @@
     "build:mac": "npm run build && electron-builder --mac --publish never",
     "build:linux": "npm run build && electron-builder --linux --publish never",
     "build:all": "npm run build && electron-builder -mwl",
+    "build:local:win": "npm run build && electron-builder --win",
+    "build:local:mac": "npm run build && electron-builder --mac",
+    "build:local:linux": "npm run build && electron-builder --linux",
+    "build:local:all": "npm run build && electron-builder -mwl",
     "clean": "rm -rf dist release build"
   },
   "keywords": [],

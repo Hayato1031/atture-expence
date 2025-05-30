@@ -5,6 +5,11 @@ on:
     tags:
       - 'v*'
 
+# GitHub Actions permissions
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   # Windows Build
   build-windows:
@@ -29,6 +34,7 @@ jobs:
       run: npm run build:win
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        CI: true
         
     - name: Upload Windows artifacts
       uses: actions/upload-artifact@v4
@@ -55,10 +61,12 @@ jobs:
     - name: Build React app
       run: npm run build
       
-    - name: Build macOS app
+    - name: Build macOS app (without code signing)
       run: npm run build:mac
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        CI: true
+        CSC_IDENTITY_AUTO_DISCOVERY: false
         
     - name: Upload macOS artifacts
       uses: actions/upload-artifact@v4
@@ -89,6 +97,7 @@ jobs:
       run: npm run build:linux
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        CI: true
         
     - name: Upload Linux artifacts
       uses: actions/upload-artifact@v4
@@ -100,6 +109,9 @@ jobs:
   release:
     needs: [build-windows, build-macos, build-linux]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -123,7 +135,7 @@ jobs:
         path: release/
         
     - name: Create Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         files: |
           release/*.exe
@@ -132,5 +144,6 @@ jobs:
         body_path: CHANGELOG.md
         draft: false
         prerelease: false
-      env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        make_latest: true
+        fail_on_unmatched_files: false
+        token: ${{ secrets.GH_TOKEN }}

@@ -149,3 +149,72 @@ MIT License - 詳細は LICENSE ファイルを参照
 **開発者**: Claude Code Assistant  
 **バージョン**: 1.0.0  
 **最終更新**: 2025年5月29日
+
+## 🔧 環境別ビルド設定
+
+### ローカル開発環境（コード署名あり）
+
+macOSでローカルビルドする場合、Xcodeの開発証明書を使用してコード署名が行われます：
+
+```bash
+# ローカル環境用ビルド（コード署名あり）
+npm run build:local:mac    # macOS
+npm run build:local:win    # Windows  
+npm run build:local:linux  # Linux
+npm run build:local:all    # 全プラットフォーム
+```
+
+#### CI/CD環境（コード署名なし）
+
+GitHub ActionsなどのCI環境では、コード署名を無効化してビルドします：
+
+```bash
+# CI環境用ビルド（コード署名なし）
+npm run build:mac    # macOS
+npm run build:win    # Windows
+npm run build:linux  # Linux
+npm run build:all    # 全プラットフォーム
+```
+
+### 環境変数
+
+- `CI=true`: CI環境での実行を示し、コード署名を無効化
+- `CSC_IDENTITY_AUTO_DISCOVERY=false`: 証明書の自動検出を無効化
+
+### macOSコード署名について
+
+**ローカル環境**:
+- Xcodeがインストールされている場合、自動的に開発証明書でコード署名
+- `hardenedRuntime: true`が適用
+- entitlementsファイルが使用される
+
+**CI環境**:
+- コード署名なしでビルド
+- ユーザーは「開発元を確認できません」の警告を見る
+- 右クリック→開くで実行可能
+
+## 📄 リリース
+
+GitHub Actionsによる自動リリースが設定されています：
+
+```bash
+# 新しいバージョンタグを作成してプッシュ
+git tag v1.0.x
+git push origin v1.0.x
+```
+
+## 📄 トラブルシューティング
+
+### macOSで「アプリが変更されているか破損しています」エラー
+
+CI環境でビルドされたmacOSアプリは署名されていないため、以下の手順で実行してください：
+
+1. アプリを右クリック
+2. 「開く」を選択
+3. 警告ダイアログで「開く」をクリック
+
+または、ターミナルで以下のコマンドを実行：
+
+```bash
+sudo spctl --master-disable
+```
