@@ -214,7 +214,7 @@ npm run build  # ローカルでエラーを確認
 
 **権限エラーの場合:**
 - GitHubリポジトリの**Settings** → **Actions**で権限を確認
-- `GITHUB_TOKEN`の権限を確認
+- `GH_TOKEN`の権限を確認
 
 #### 3. ビルドが失敗する
 
